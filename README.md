@@ -24,6 +24,11 @@ to their [documentation](https://portswigger.net/burp/help/extender.html#loading
 In BurpSuite, open the Proxy tab, then the Options tab. Scroll to the bottom of the pane, under the title "Miscellaneous",
 untick both "Unpack gzip / deflate in requests" and "Unpack gzip / deflate in responses".
 
+## How do I build this shit?
+Either use the build.xml with [ant](https://ant.apache.org), this will automatically download the latest free version
+of BurpSuite to compile against. Or open the project in [Eclipe](http://www.eclipse.org/), create a lib directory and put
+the burpsuite.jar in it, that you can download from [portswigger.net](https://portswigger.net/DownloadUpdate.ashx?Product=Free).
+
 
 ## Acknowledgements
 This is my first BurpSuite extension, highly inspired by [federicodotta/BurpJDSer-ng-edited](https://github.com/federicodotta/BurpJDSer-ng-edited)
