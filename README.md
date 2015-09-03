@@ -15,10 +15,15 @@ When using this extension, you will be able to access and modify compressed HTTP
 within a new tab in BurpSuite. The tab will appear as soon as compressed data is detected in a message body. For this,
 you need to disable automatic unpacking of data by BurpSuite.
 
+## How is it installed?
+Launch BurpSuite, go to the Extender tab and then open the Extensions tab and click on "Add". In the dialog window,
+select "java" as Extension Type and select the burp-decompressor.jar, that you can download from the [releases](https://github.com/antoinet/burp-decompressor/releases). For further details about BurpSuite extensions, refer
+to their [documentation](https://portswigger.net/burp/help/extender.html#loading).
+
 ## How to disable automatic content decompression in BurpSuite?
 In BurpSuite, open the Proxy tab, then the Options tab. Scroll to the bottom of the pane, under the title "Miscellaneous",
 untick both "Unpack gzip / deflate in requests" and "Unpack gzip / deflate in responses".
 
 
 ## Acknowledgements
-This is my first BurpSuite extension, highly inspired by https://github.com/federicodotta/BurpJDSer-ng-edited
+This is my first BurpSuite extension, highly inspired by [federicodotta/BurpJDSer-ng-edited](https://github.com/federicodotta/BurpJDSer-ng-edited)
