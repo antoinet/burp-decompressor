@@ -65,8 +65,7 @@ public class PkzipInputTab extends AbstractDecompressorEditorTab implements IMes
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		byte[] buf = new byte[1024];
 		int bytes_read;
-		ZipEntry entry = zis.getNextEntry();
-		BurpExtender._stdout.println("ZipEntry: " + entry.getName());
+		zis.getNextEntry();
 		while ((bytes_read = zis.read(buf)) > 0) {
 			baos.write(buf, 0, bytes_read);
 		}

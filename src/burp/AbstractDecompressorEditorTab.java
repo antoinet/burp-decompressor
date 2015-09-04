@@ -28,6 +28,7 @@ import java.awt.Component;
 import java.io.PrintStream;
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.util.Arrays;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -95,12 +96,12 @@ public abstract class AbstractDecompressorEditorTab implements IMessageEditorTab
 
 				byte[] uncompressed = textEditor.getText();
 				byte[] newBody = compress(uncompressed);
-				helpers.buildHttpMessage(helpers.analyzeRequest(this.currentMessage).getHeaders(), newBody);
+				message = helpers.buildHttpMessage(helpers.analyzeRequest(this.currentMessage).getHeaders(), newBody);
 
 			} catch (Exception e) {
 				Logger.getLogger(getClass().getName()).log(Level.SEVERE, null, e);
 				textEditor.setText(helpers.stringToBytes("\n--- FAILURE ---\n\nSee output in extension tab for details"));
-				BurpExtender._stderr.println(getStackTrace(e));
+				stderr.println(getStackTrace(e));
 			}
 		}
 
@@ -145,7 +146,7 @@ public abstract class AbstractDecompressorEditorTab implements IMessageEditorTab
 			} catch (Exception e) {
 				Logger.getLogger(getClass().getName()).log(Level.SEVERE, null, e);
 				textEditor.setText(helpers.stringToBytes("\n--- FAILURE ---\n\nSee output in extension tab for details"));
-				BurpExtender._stderr.println(getStackTrace(e));
+				stderr.println(getStackTrace(e));
 			}
 			textEditor.setEditable(editable);
 		}

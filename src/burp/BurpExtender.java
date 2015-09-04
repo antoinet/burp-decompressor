@@ -24,15 +24,10 @@
 
 package burp;
 
-import java.io.PrintStream;
-
 /**
  * Decompressor, an Extension for Burp Suite.
  */
 public class BurpExtender implements IBurpExtender {
-
-	public static PrintStream _stdout;
-	public static PrintStream _stderr;
 
 
 	@Override

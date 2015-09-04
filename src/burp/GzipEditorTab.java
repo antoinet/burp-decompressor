@@ -80,10 +80,10 @@ class GzipEditorTab extends AbstractDecompressorEditorTab implements IMessageEdi
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		GZIPOutputStream gzos = new GZIPOutputStream(baos);
 		gzos.write(content);
+		gzos.flush();
 		gzos.close();
 		baos.close();
-		byte[] baZipped = baos.toByteArray();
-		return getHelpers().buildHttpMessage(getHelpers().analyzeRequest(getCurrentMessage()).getHeaders(), baZipped);
+		return baos.toByteArray();
 	}
 
 }
