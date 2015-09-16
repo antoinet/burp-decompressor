@@ -40,9 +40,9 @@ class GzipEditorTab extends AbstractDecompressorEditorTab implements IMessageEdi
 	public static final byte[] GZIP_MAGIC = { (byte) 0x1f, (byte) 0x8b };
 
 
-	public GzipEditorTab(IBurpExtenderCallbacks callbacks,
+	public GzipEditorTab(IMessageEditorController controller, IBurpExtenderCallbacks callbacks,
 			IExtensionHelpers helpers, 	boolean editable) {
-		super(callbacks, helpers, editable);
+		super(controller, callbacks, helpers, editable);
 	}
 
 

@@ -40,7 +40,7 @@ public class BurpExtender implements IBurpExtender {
 		callbacks.registerMessageEditorTabFactory(new IMessageEditorTabFactory() {
 			@Override
 			public IMessageEditorTab createNewInstance(IMessageEditorController controller, boolean editable) {
-				return new GzipEditorTab(callbacks, helpers, editable);
+				return new GzipEditorTab(controller, callbacks, helpers, editable);
 			}
 		});
 
@@ -48,7 +48,7 @@ public class BurpExtender implements IBurpExtender {
 		callbacks.registerMessageEditorTabFactory(new IMessageEditorTabFactory() {
 			@Override
 			public IMessageEditorTab createNewInstance(IMessageEditorController controller, boolean editable) {
-				return new PkzipInputTab(callbacks, helpers, editable);
+				return new PkzipInputTab(controller, callbacks, helpers, editable);
 			}
 		});
 	}

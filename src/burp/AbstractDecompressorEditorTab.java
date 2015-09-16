@@ -28,7 +28,6 @@ import java.awt.Component;
 import java.io.PrintStream;
 import java.io.PrintWriter;
 import java.io.StringWriter;
-import java.util.Arrays;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -43,18 +42,18 @@ public abstract class AbstractDecompressorEditorTab implements IMessageEditorTab
 	private IBurpExtenderCallbacks callbacks;
 	private IExtensionHelpers helpers;
 	private boolean editable;
-	private ITextEditor textEditor;
+	private IMessageEditor messageEditor;
 	private byte[] currentMessage;
 
 
-	public AbstractDecompressorEditorTab(IBurpExtenderCallbacks callbacks,
+	public AbstractDecompressorEditorTab(IMessageEditorController controller, IBurpExtenderCallbacks callbacks,
 			IExtensionHelpers helpers, boolean editable) {
 
 		this.callbacks = callbacks;
 		this.helpers = helpers;
 		this.editable = editable;
 
-		this.textEditor = callbacks.createTextEditor();
+		this.messageEditor = callbacks.createMessageEditor(controller, editable);
 	}
 
 	/**
@@ -91,16 +90,15 @@ public abstract class AbstractDecompressorEditorTab implements IMessageEditorTab
 		byte[] message = this.currentMessage;
 
 		// recompress the data unless it is unchanged
-		if (textEditor.isTextModified()) {
+		if (messageEditor.isMessageModified()) {
 			try {
 
-				byte[] uncompressed = textEditor.getText();
+				byte[] uncompressed = messageEditor.getMessage();
 				byte[] newBody = compress(uncompressed);
 				message = helpers.buildHttpMessage(helpers.analyzeRequest(this.currentMessage).getHeaders(), newBody);
 
 			} catch (Exception e) {
 				Logger.getLogger(getClass().getName()).log(Level.SEVERE, null, e);
-				textEditor.setText(helpers.stringToBytes("\n--- FAILURE ---\n\nSee output in extension tab for details"));
 				stderr.println(getStackTrace(e));
 			}
 		}
@@ -115,25 +113,24 @@ public abstract class AbstractDecompressorEditorTab implements IMessageEditorTab
 
 	@Override
 	public byte[] getSelectedData() {
-		return textEditor.getSelectedText();
+		return messageEditor.getSelectedData();
 	}
 
 	@Override
 	public Component getUiComponent() {
-		return textEditor.getComponent();
+		return messageEditor.getComponent();
 	}
 
 	@Override
 	public boolean isModified() {
-		return textEditor.isTextModified();
+		return messageEditor.isMessageModified();
 	}
 
 	@Override
 	public void setMessage(byte[] content, boolean isRequest) {
 		if (content == null) {
 			// clear the editor
-			textEditor.setText(null);
-			textEditor.setEditable(false);
+			messageEditor.setMessage(null, isRequest);
 		} else {
 			try {
 
@@ -141,14 +138,13 @@ public abstract class AbstractDecompressorEditorTab implements IMessageEditorTab
 				if (detect(content)) {
 					decompressed = decompress(content);
 				}
-				textEditor.setText(decompressed);
+				messageEditor.setMessage(decompressed, isRequest);
 
 			} catch (Exception e) {
 				Logger.getLogger(getClass().getName()).log(Level.SEVERE, null, e);
-				textEditor.setText(helpers.stringToBytes("\n--- FAILURE ---\n\nSee output in extension tab for details"));
+				messageEditor.setMessage(helpers.stringToBytes("\n--- FAILURE ---\n\nSee output in extension tab for details"), isRequest);
 				stderr.println(getStackTrace(e));
 			}
-			textEditor.setEditable(editable);
 		}
 
 		// remember the currently displayed content
@@ -179,8 +175,8 @@ public abstract class AbstractDecompressorEditorTab implements IMessageEditorTab
 		return helpers;
 	}
 
-	protected ITextEditor getTextEditor() {
-		return textEditor;
+	protected IMessageEditor getMessageEditor() {
+		return messageEditor;
 	}
 
 	protected PrintStream getStderr() {

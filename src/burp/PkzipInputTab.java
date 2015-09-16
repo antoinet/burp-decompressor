@@ -38,9 +38,9 @@ public class PkzipInputTab extends AbstractDecompressorEditorTab implements IMes
 	public static final byte[] PKZIP_MAGIC = { (byte) 0x50, (byte) 0x4b, (byte) 0x03, (byte) 0x04 };
 
 
-	public PkzipInputTab(IBurpExtenderCallbacks callbacks,
+	public PkzipInputTab(IMessageEditorController controller, IBurpExtenderCallbacks callbacks,
 			IExtensionHelpers helpers, boolean editable) {
-		super(callbacks, helpers, editable);
+		super(controller, callbacks, helpers, editable);
 	}
 
 
