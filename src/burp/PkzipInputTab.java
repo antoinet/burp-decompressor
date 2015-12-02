@@ -36,6 +36,9 @@ import java.util.zip.ZipOutputStream;
 public class PkzipInputTab extends AbstractDecompressorEditorTab implements IMessageEditorTab {
 
 	public static final byte[] PKZIP_MAGIC = { (byte) 0x50, (byte) 0x4b, (byte) 0x03, (byte) 0x04 };
+	
+	/** current zipentry. */
+	private String zipEntry = "";
 
 
 	public PkzipInputTab(IMessageEditorController controller, IBurpExtenderCallbacks callbacks,
@@ -52,20 +55,21 @@ public class PkzipInputTab extends AbstractDecompressorEditorTab implements IMes
 
 	@Override
 	public boolean detect (byte[] content) {
-		return getHelpers().indexOf(content, PKZIP_MAGIC, false, 0, content.length) > -1;
+		int bodyOffset = getHelpers().analyzeRequest(content).getBodyOffset();
+		return getHelpers().indexOf(content, PKZIP_MAGIC, false, bodyOffset, bodyOffset + PKZIP_MAGIC.length) > -1;
 	}
 
 
 	@Override
 	protected byte[] decompress(byte[] content) throws IOException, DataFormatException {
-		int pkzipPos = getHelpers().indexOf(content, PKZIP_MAGIC, false, 0, content.length);
-		byte[] baCompressed = Arrays.copyOfRange(content, pkzipPos, content.length);
+		int bodyOffset = getHelpers().analyzeRequest(content).getBodyOffset();
+		byte[] baCompressed = Arrays.copyOfRange(content, bodyOffset, content.length);
 
 		ZipInputStream zis = new ZipInputStream(new ByteArrayInputStream(baCompressed));
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		byte[] buf = new byte[1024];
 		int bytes_read;
-		zis.getNextEntry();
+		zipEntry = zis.getNextEntry().getName();
 		while ((bytes_read = zis.read(buf)) > 0) {
 			baos.write(buf, 0, bytes_read);
 		}
@@ -80,7 +84,7 @@ public class PkzipInputTab extends AbstractDecompressorEditorTab implements IMes
 	protected byte[] compress(byte[] content) throws IOException {
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		ZipOutputStream zos = new ZipOutputStream(baos);
-		zos.putNextEntry(new ZipEntry("")); // MapperExecDoc.xml
+		zos.putNextEntry(new ZipEntry(zipEntry));
 		zos.write(content);
 		zos.close();
 		baos.close();

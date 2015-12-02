@@ -53,15 +53,16 @@ class GzipEditorTab extends AbstractDecompressorEditorTab implements IMessageEdi
 
 	@Override
 	protected boolean detect(byte[] content) {
-		return getHelpers().indexOf(content, GZIP_MAGIC, false, 0, content.length) > -1;
+		int bodyOffset = getHelpers().analyzeRequest(content).getBodyOffset();
+		return getHelpers().indexOf(content, GZIP_MAGIC, true, bodyOffset, bodyOffset + GZIP_MAGIC.length) > -1;
 	}
 
 
 	@Override
 	protected byte[] decompress(byte[] content) throws IOException {
-		int gzipPos = getHelpers().indexOf(content, GZIP_MAGIC, false, 0, content.length);
+		int bodyOffset = getHelpers().analyzeRequest(content).getBodyOffset();
 
-		byte[] compressed = Arrays.copyOfRange(content, gzipPos, content.length);
+		byte[] compressed = Arrays.copyOfRange(content, bodyOffset, content.length);
 
 		GZIPInputStream gzis = new GZIPInputStream(new ByteArrayInputStream(compressed));
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
