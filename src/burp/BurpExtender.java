@@ -51,6 +51,14 @@ public class BurpExtender implements IBurpExtender {
 				return new PkzipInputTab(controller, callbacks, helpers, editable);
 			}
 		});
+
+		// register deflate editor tab
+		callbacks.registerMessageEditorTabFactory(new IMessageEditorTabFactory() {
+			@Override
+			public IMessageEditorTab createNewInstance(IMessageEditorController controller, boolean editable) {
+				return new DeflateEditorTab(controller, callbacks, helpers, editable);
+			}
+		});
 	}
 
 }
