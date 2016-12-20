@@ -36,7 +36,7 @@ import java.util.zip.ZipOutputStream;
 public class PkzipInputTab extends AbstractDecompressorEditorTab implements IMessageEditorTab {
 
 	public static final byte[] PKZIP_MAGIC = { (byte) 0x50, (byte) 0x4b, (byte) 0x03, (byte) 0x04 };
-	
+
 	/** current zipentry. */
 	private String zipEntry = "";
 
@@ -56,7 +56,7 @@ public class PkzipInputTab extends AbstractDecompressorEditorTab implements IMes
 	@Override
 	public boolean detect (byte[] content) {
 		int bodyOffset = getHelpers().analyzeRequest(content).getBodyOffset();
-		return getHelpers().indexOf(content, PKZIP_MAGIC, false, bodyOffset, bodyOffset + PKZIP_MAGIC.length) > -1;
+		return getHelpers().indexOf(content, PKZIP_MAGIC, false, bodyOffset, content.length) > -1;
 	}
 
 
