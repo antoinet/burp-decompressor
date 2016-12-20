@@ -3,11 +3,11 @@ An extension for BurpSuite used to access and modify compressed HTTP payloads wi
 
 ## Why this extension?
 Often, HTTP traffic is compressed by the server before it is sent to the client in order to reduce network load.
-Typically used algorithms are gzip or deflate. By default, BurpSuite will decompress all intercepted data in the body 
+Typically used algorithms are gzip or deflate. By default, BurpSuite will decompress all intercepted data in the body
 of HTTP messages in order to display plain text payloads in the different tabs and make stuff searchable. However, the
 content is not recompressed back before it is sent to the browser. Usually, this isn't a problem.
 
-In cases where the traffic is intended for other types of client instead of a browser, e.g. a fat/rich client using 
+In cases where the traffic is intended for other types of client instead of a browser, e.g. a fat/rich client using
 RMI over HTTP, the used content-encoding may sometimes be fixed and changing it will result in an error.
 
 ## What is it?
@@ -32,3 +32,5 @@ the burpsuite.jar in it, that you can download from [portswigger.net](https://po
 
 ## Acknowledgements
 This is my first BurpSuite extension, highly inspired by [federicodotta/BurpJDSer-ng-edited](https://github.com/federicodotta/BurpJDSer-ng-edited)
+
+LZ4 support was added by [kumzugloom](https://github.com/kumzugloom)
