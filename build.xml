@@ -23,15 +23,15 @@ SOFTWARE.
 -->
 
 <project name="burp-decompressor" default="dist" basedir=".">
-	
+
   <!-- set global properties for this build -->
   <property name="src" location="src"/>
   <property name="lib" location="lib"/>
   <property name="burpsuite.jar" location="${lib}/burpsuite_free_latest.jar"/>
+  <property name="lz4.jar" location="${lib}/lz4-1.3.0.jar"/>
   <property name="build" location="build"/>
   <property name="dist" location="dist"/>
 
-	
   <target name="init">
     <!-- Create the time stamp -->
     <tstamp/>
@@ -39,20 +39,26 @@ SOFTWARE.
     <mkdir dir="${build}"/>
   	<mkdir dir="${lib}"/>
   	<get src="https://portswigger.net/DownloadUpdate.ashx?Product=Free" dest="${burpsuite.jar}" skipexisting="true"/>
+  	<get src="https://repo1.maven.org/maven2/net/jpountz/lz4/lz4/1.3.0/lz4-1.3.0.jar" dest="${lz4.jar}" skipexisting="true"/>
+
   </target>
 
-	
   <target name="compile" depends="init" description="compile the source">
     <!-- Compile the java code from ${src} into ${build} -->
-    <javac srcdir="${src}" classpath="${burpsuite.jar}" destdir="${build}"/>
+    <javac srcdir="${src}" classpath="${burpsuite.jar}" destdir="${build}">
+        <classpath>
+            <pathelement path="lib/lz4-1.3.0.jar"/>
+        </classpath>
+  	</javac>
   </target>
 
   <target name="dist" depends="compile" description="generate the distribution">
     <!-- Create the distribution directory -->
     <mkdir dir="${dist}"/>
-
-    <!-- Put everything in ${build} into the MyProject-${DSTAMP}.jar file -->
-    <jar jarfile="${dist}/${ant.project.name}-${DSTAMP}.jar" basedir="${build}"/>
+  	<!-- Put everything in ${build} into the MyProject-${DSTAMP}.jar file -->
+    <jar jarfile="${dist}/${ant.project.name}-${DSTAMP}.jar" basedir="${build}">
+    	<zipgroupfileset dir="lib" includes="lz4-1.3.0.jar" />
+    </jar>
   </target>
 
   <target name="clean" description="clean up">
